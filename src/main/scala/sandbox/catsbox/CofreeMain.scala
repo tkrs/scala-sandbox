@@ -1,8 +1,8 @@
 package sandbox
 package catsbox
 
-import cats.{Applicative, Eval, Traverse}
-import cats.free.{Cofree, Free}
+import cats.Eval
+import cats.free.Cofree
 
 sealed trait Expr[A]
 
@@ -42,8 +42,7 @@ object Main extends App {
   def ana = gen(100)
 
   def r =
-    Cofree.cata[Option, Int, Boolean](ana)((a, fb) =>
-      Eval.later(fb.map(_ && (a % 2 == 0)).getOrElse(true)))
+    Cofree.cata[Option, Int, Boolean](ana)((a, fb) => Eval.later(fb.forall(_ && (a % 2 == 0))))
 
   Log.println(r.value)
 }
