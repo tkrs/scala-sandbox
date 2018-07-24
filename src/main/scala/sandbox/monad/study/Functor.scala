@@ -1,6 +1,6 @@
 package sandbox.monad.study
 
-import scala.Predef.{ identity => id }
+import scala.Predef.{identity => id}
 
 trait Functor[F[_]] {
 
@@ -12,12 +12,15 @@ object Functor {
   def apply[F[_]](implicit F: Functor[F]): Functor[F] = F
 
   implicit final class FunctorOp[F[_], A](val fa: F[A]) extends AnyVal {
-    @inline def map[B](f: A => B)(implicit F: Functor[F]): F[B] = F.map(fa)(f)
     @inline def `<$>`[B](f: A => B)(implicit F: Functor[F]): F[B] = map(f)
+
+    @inline def map[B](f: A => B)(implicit F: Functor[F]): F[B] = F.map(fa)(f)
   }
+
 }
 
 trait FunctorLaws[F[_]] {
+
   import Functor._
 
   implicit val F: Functor[F]

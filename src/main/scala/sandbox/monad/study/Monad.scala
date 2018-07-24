@@ -2,6 +2,7 @@ package sandbox.monad.study
 
 trait Monad[F[_]] extends Applicative[F] {
   def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
+
   def pure[A](a: A): F[A]
 
   override def ap[A, B](ff: F[A => B])(fa: F[A]): F[B] =
@@ -15,19 +16,22 @@ trait Monad[F[_]] extends Applicative[F] {
 }
 
 object Monad {
-  implicit final class MonadOp[F[_], A](val fa: F[A]) extends AnyVal {
-    def flatMap[B](f: A => F[B])(implicit F: Monad[F]): F[B] =
-      F.flatMap(fa)(f)
 
+  implicit final class MonadOp[F[_], A](val fa: F[A]) extends AnyVal {
     def >>=[B](f: A => F[B])(implicit F: Monad[F]): F[B] =
       flatMap(f)
+
+    def flatMap[B](f: A => F[B])(implicit F: Monad[F]): F[B] =
+      F.flatMap(fa)(f)
 
     def >>[B](fb: F[B])(implicit F: Monad[F]): F[B] =
       flatMap(_ => fb)
   }
+
 }
 
 trait MonadLaws[F[_]] {
+
   import Monad._, Applicative._
 
   implicit val F: Monad[F]

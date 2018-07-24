@@ -1,6 +1,6 @@
 package sandbox.monad.study
 
-import data.{ Maybe, Just, Nothing }
+import data.{Maybe, Just, Nothing}
 import org.scalatest._
 
 class ApplicativeSpec extends FunSuite {
@@ -9,11 +9,13 @@ class ApplicativeSpec extends FunSuite {
     override implicit val F = new Applicative[Maybe] {
       override def ap[A, B](ff: Maybe[A => B])(fa: Maybe[A]): Maybe[B] = ff match {
         case Nothing => Nothing
-        case Just(f) => fa match {
-          case Nothing => Nothing
-          case Just(a) => Maybe(f(a))
-        }
+        case Just(f) =>
+          fa match {
+            case Nothing => Nothing
+            case Just(a) => Maybe(f(a))
+          }
       }
+
       override def pure[A](a: A): Maybe[A] = Maybe(a)
     }
   }
