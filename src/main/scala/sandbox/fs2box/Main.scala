@@ -1,17 +1,23 @@
 package sandbox.fs2box
 
-import java.io.ByteArrayInputStream
+import java.io.{ByteArrayInputStream, InputStream}
 import java.nio.charset.StandardCharsets
+import java.util.concurrent.{Executors, ThreadFactory}
+
+import cats.effect.{ExitCode, IO, IOApp}
+import fs2._
+
+import scala.concurrent.ExecutionContext
+import scala.util.control.NonFatal
 
 object A {
-  val line = new ByteArrayInputStream(s"""6
+  val line: InputStream = new ByteArrayInputStream(s"""
        |red
        |red
        |blue
        |yellow
        |yellow
        |red
-       |5
        |red
        |red
        |yellow
@@ -22,10 +28,24 @@ object A {
 
 import A._
 
-object Main extends App {
-  val s = new java.util.Scanner(line)
-  def f = { val n = s.nextInt; Iterator.continually(s.next).take(n) }
-  val a = f.foldLeft(Map.empty[String, Int].withDefaultValue(0))((l, r) => l.updated(r, 1 + l(r)))
-  val b = f.foldLeft(a)((l, r) => l.updated(r, l(r) - 1))
-  println(Math.max(0, b.values.max))
+object Main extends IOApp {
+  def run(args: List[String]): IO[ExitCode] = {
+    val ec = ExecutionContext.fromExecutorService(Executors.newCachedThreadPool(new ThreadFactory {
+      override def newThread(r: Runnable): Thread = {
+        val t = new Thread(r)
+        t.setDaemon(true)
+        t
+      }
+    }))
+    io.readInputStream(IO(line), 3, ec)
+      .through(text.utf8Decode)
+      .through(text.lines)
+      .map(s => println(s))
+      .compile
+      .drain
+      .map(_ => ExitCode.Success)
+      .handleErrorWith {
+        case NonFatal(_) => IO.pure(ExitCode.Error)
+      }
+  }
 }

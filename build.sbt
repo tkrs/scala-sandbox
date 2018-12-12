@@ -1,7 +1,7 @@
 name := "scala-sandbox"
 organization := "com.tkrs.github"
 version := "1.0.0"
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.8"
 
 scalacOptions := Seq(
   "-deprecation",
@@ -29,23 +29,25 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.github.finagle" %% "finch-core" % "0.22.0",
-  "com.github.finagle" %% "finch-circe" % "0.22.0",
+  "com.github.finagle" %% "finchx-core" % "0.26.1",
+  "com.github.finagle" %% "finchx-circe" % "0.26.1",
   "com.chuusai" %% "shapeless" % "2.3.3",
-  "org.typelevel" %% "cats-free" % "1.2.0",
-  "co.fs2" %% "fs2-io" % "0.10.5",
-  "io.catbird" %% "catbird-util" % "18.7.0",
+  "org.typelevel" %% "cats-free" % "1.5.0",
+  "co.fs2" %% "fs2-io" % "1.0.1",
+  "io.catbird" %% "catbird-util" % "18.12.0",
   "io.monix" %% "monix" % "3.0.0-RC1",
   "com.google.guava" % "guava" % "22.0",
-).map(_.withSources)
+)
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.0.4",
+  "org.scalatest" %% "scalatest" % "3.0.5",
   "org.scalacheck" %% "scalacheck" % "1.14.0",
-).map(_.withSources % "test")
+).map(_ % Test)
+
+libraryDependencies := libraryDependencies.value.map(_.withSources)
 
 enablePlugins(JmhPlugin)
-addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.7")
+addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.9")
 
 // lazy val root = project.in(file(".")).dependsOn(agni)
 // lazy val agni = ProjectRef.apply(uri("https://github.com/yanana/agni.git"), "free")
