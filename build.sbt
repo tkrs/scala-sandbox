@@ -15,6 +15,8 @@ scalacOptions := Seq(
 
 Compile / console / scalacOptions --= warningOptions
 
+ThisBuild / run / fork := true
+
 lazy val warningOptions = Seq(
   "-Xlint",
   "-Yno-adapted-args",
@@ -29,6 +31,9 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
+//  "com.github.finagle" %% "finch-core" % "0.26.0",
+//  "com.github.finagle" %% "finch-circe" % "0.26.0",
+//  "io.circe" %% "circe-generic" % "0.10.1",
   "com.github.finagle" %% "finchx-core" % "0.26.1",
   "com.github.finagle" %% "finchx-circe" % "0.26.1",
   "com.chuusai" %% "shapeless" % "2.3.3",
