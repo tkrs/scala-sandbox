@@ -20,7 +20,7 @@ object Main {
     def isClosed: Boolean     = closed
     def isTerminated: Boolean = worker.isTerminated
 
-    def call(): Unit = {
+    def call(): Unit =
       if (queue.isEmpty) {
         running.set(false)
       } else {
@@ -34,9 +34,8 @@ object Main {
           scheduler.schedule(W, 500, MILLISECONDS)
         }
       }
-    }
 
-    def start(): Unit = {
+    def start(): Unit =
       if (!running.get && running.compareAndSet(false, true)) {
         if (!worker.isShutdown) {
           Log.println("Start schedule.")
@@ -45,7 +44,6 @@ object Main {
           running.set(false)
         }
       }
-    }
 
     def close(): Unit = {
       start()
@@ -157,12 +155,11 @@ object X {
 
     def toggle = running.compareAndSet(false, true)
 
-    def start(): Unit = {
+    def start(): Unit =
       if (!closed && !q.isEmpty && (!running.get && toggle)) {
 
         w1.execute(new Runnable { self =>
-          def run(): Unit = {
-
+          def run(): Unit =
             w2.schedule(
               new Runnable {
                 def run(): Unit = {
@@ -181,10 +178,8 @@ object X {
               1,
               SECONDS
             )
-          }
         })
       }
-    }
 
     val task = new Runnable {
       def run(): Unit =
@@ -232,12 +227,11 @@ object Y {
     val counter   = new AtomicLong(0)
 
     scheduler.execute(new Runnable {
-      def run(): Unit = {
+      def run(): Unit =
         while (true) {
           Log.println(s"${counter.getAndIncrement()}")
           SECONDS.sleep(1)
         }
-      }
     })
 
     T.quit(scheduler)

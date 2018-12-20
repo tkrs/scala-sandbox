@@ -1,6 +1,6 @@
 package sandbox.monad.study
 
-import data.{Maybe, Just, Nothing}
+import data.{Just, Maybe, Nothing}
 import org.scalatest._
 
 class MonadSpec extends FunSuite {
