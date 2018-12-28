@@ -12,8 +12,8 @@ import scala.concurrent.duration._
 @State(Scope.Thread)
 @BenchmarkMode(Array(Mode.Throughput))
 @OutputTimeUnit(SECONDS)
-@Warmup(iterations = 5, time = 1)
-@Measurement(iterations = 10, time = 1)
+@Warmup(iterations = 10, time = 1)
+@Measurement(iterations = 10, time = 5)
 @Fork(2)
 abstract class RootBench
 
@@ -21,9 +21,12 @@ abstract class RootBench
 //  import io.finch.syntax._
 //  import com.twitter.util.Future
 //
-//  private[this] val foo  = get(path("users") :: path("foo")).mapAsync(_ => Future(10))
-//  private[this] val bar  = get(path("users") :: path("bar")).mapAsync(_ => Future("10"))
-//  private[this] val quux = get(path("users") :: path("quux")).mapAsync(_ => Future(10.0))
+//  private[this] val foo =
+//    get(path("users") :: path("foo") :: path[Int]).mapAsync(a => Future(a * 10))
+//  private[this] val bar =
+//    get(path("users") :: path("bar") :: path[Int]).mapAsync(a => Future(s"$a * 10"))
+//  private[this] val quux =
+//    get(path("users") :: path("quux") :: path[Int]).mapAsync(a => Future(a * 10.0))
 //
 //  private[this] val users = foo :+: bar :+: quux
 //
@@ -35,9 +38,8 @@ abstract class RootBench
 //    .toService
 //
 //  @Benchmark
-//  def requestBench: Response = {
-//    Await.result(api.apply(Request("/users/bar")))
-//  }
+//  def requestBench: Response =
+//    Await.result(api.apply(Request("/users/bar/10")))
 //}
 
 class FinchCatsEffectBench extends RootBench {
@@ -48,9 +50,12 @@ class FinchCatsEffectBench extends RootBench {
 
   implicit val S: ContextShift[IO] = IO.contextShift(ExecutionContext.global)
 
-  private[this] val foo  = get(path("users") :: path("foo")).mapAsync(_ => IO(10))
-  private[this] val bar  = get(path("users") :: path("bar")).mapAsync(_ => IO("10"))
-  private[this] val quux = get(path("users") :: path("quux")).mapAsync(_ => IO(10.0))
+  private[this] val foo =
+    get(path("users") :: path("foo") :: path[Int]).mapAsync(a => IO(a * 10))
+  private[this] val bar =
+    get(path("users") :: path("bar") :: path[Int]).mapAsync(a => IO(s"$a * 10"))
+  private[this] val quux =
+    get(path("users") :: path("quux") :: path[Int]).mapAsync(a => IO(a * 10.0))
 
   private[this] val users = foo :+: bar :+: quux
 
@@ -62,7 +67,6 @@ class FinchCatsEffectBench extends RootBench {
     .toService
 
   @Benchmark
-  def requestBench: Response = {
-    Await.result(api.apply(Request("/users/bar")))
-  }
+  def requestBench: Response =
+    Await.result(api.apply(Request("/users/bar/10")))
 }
