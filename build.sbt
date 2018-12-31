@@ -42,7 +42,7 @@ libraryDependencies ++= Seq(
   "io.catbird"         %% "catbird-util"   % "18.12.0",
   "io.catbird"         %% "catbird-effect" % "18.12.0",
   "io.trane"           %% "arrows-twitter" % "0.1.23",
-  "io.monix"           %% "monix"          % "3.0.0-RC1",
+  "io.monix"           %% "monix"          % "3.0.0-RC2",
   "com.google.guava"   % "guava"           % "22.0"
 )
 
