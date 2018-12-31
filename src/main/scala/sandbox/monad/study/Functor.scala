@@ -29,7 +29,7 @@ trait FunctorLaws[F[_]] {
     fa `<$>` id == fa
 
   def associativity[A, B, C](fa: F[A], f: A => B, g: B => C): Boolean =
-    (fa `<$>` f) `<$>` g == fa `<$>` (f andThen g)
+    (fa `<$>` f) `<$>` g == fa `<$>` (f.andThen(g))
 }
 
 object FunctorLaws {

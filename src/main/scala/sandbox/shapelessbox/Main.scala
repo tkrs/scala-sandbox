@@ -43,15 +43,13 @@ object Encoder {
     def apply(a: HNil): Ast = Empty
   }
 
-  implicit def encodeHCons[K <: Symbol, H, T <: HList](
-      implicit
-      wk: Witness.Aux[K],
-      encodeH: Encoder[H],
-      encodeT: Encoder[T]): Encoder[FieldType[K, H] :: T] =
+  implicit def encodeHCons[K <: Symbol, H, T <: HList](implicit
+                                                       wk: Witness.Aux[K],
+                                                       encodeH: Encoder[H],
+                                                       encodeT: Encoder[T]): Encoder[FieldType[K, H] :: T] =
     new Encoder[FieldType[K, H] :: T] {
-      def apply(a: FieldType[K, H] :: T): Ast = {
+      def apply(a: FieldType[K, H] :: T): Ast =
         Qux(wk.value.name, encodeH(a.head), encodeT(a.tail))
-      }
     }
 
   implicit def encodeGen[A, R](implicit
