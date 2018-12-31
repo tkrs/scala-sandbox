@@ -1,6 +1,6 @@
 package sandbox.finchbox
 
 import com.twitter.util.Future
-import futureEffect._
+import sandbox.finchbox.futureEffect._
 
 object futureEndpoint extends EffectEndpoint[Future]

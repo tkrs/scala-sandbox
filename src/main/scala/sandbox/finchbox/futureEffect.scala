@@ -1,4 +1,5 @@
 package sandbox.finchbox
+
 import cats.StackSafeMonad
 import cats.effect.{Effect, ExitCase, IO, SyncIO}
 import com.twitter.util.{Future, Promise, Return, Throw}
@@ -33,10 +34,10 @@ object futureEffect {
     override def asyncF[A](k: (Either[Throwable, A] => Unit) => Future[Unit]): Future[A] = {
       val p = Promise[A]
 
-      val t = k { e =>
+      val t = k { r =>
         if (p.isDefined) ()
         else
-          e match {
+          r match {
             case Right(v) => p.setValue(v)
             case Left(e)  => p.setException(e)
           }
