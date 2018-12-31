@@ -8,10 +8,10 @@ import org.openjdk.jmh.annotations._
 import scala.concurrent.duration._
 
 @State(Scope.Thread)
-//@BenchmarkMode(Array(Mode.Throughput))
-//@OutputTimeUnit(SECONDS)
-@BenchmarkMode(Array(Mode.AverageTime))
-@OutputTimeUnit(NANOSECONDS)
+@BenchmarkMode(Array(Mode.Throughput))
+@OutputTimeUnit(SECONDS)
+//@BenchmarkMode(Array(Mode.AverageTime))
+//@OutputTimeUnit(NANOSECONDS)
 @Warmup(iterations = 10, time = 1)
 @Measurement(iterations = 10, time = 5)
 @Fork(2)

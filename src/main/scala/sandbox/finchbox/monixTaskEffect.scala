@@ -10,7 +10,7 @@ object monixTaskEffect {
   implicit def monixTaskInstance(implicit S: Scheduler): Effect[Task] = new Effect[Task] with StackSafeMonad[Task] {
 
     override def runAsync[A](fa: Task[A])(cb: Either[Throwable, A] => IO[Unit]): SyncIO[Unit] =
-      IO.async[A](cb => fa.runAsync(cb)).runAsync(cb)
+      IO.async[A](fa.runAsync).runAsync(cb)
 
     override def async[A](k: (Either[Throwable, A] => Unit) => Unit): Task[A] =
       Task.async[A] { cb =>
@@ -32,7 +32,7 @@ object monixTaskEffect {
       Task.suspend(thunk)
 
     override def bracketCase[A, B](acquire: Task[A])(use: A => Task[B])(
-      release: (A, ExitCase[Throwable]) => Task[Unit]): Task[B] =
+        release: (A, ExitCase[Throwable]) => Task[Unit]): Task[B] =
       acquire.bracketCase(use)(release)
 
     override def flatMap[A, B](fa: Task[A])(f: A => Task[B]): Task[B] =
